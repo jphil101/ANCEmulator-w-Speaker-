@@ -5,18 +5,17 @@ import time
 
 # --- Configuration ---
 # Set these to match your hardware setup
-INPUT_DEVICE_INDEX = 2  # <-- Use your Scarlett 2i2
-OUTPUT_DEVICE_INDEX = 1 # <-- Use your Built-in Output
+#Try to use low latency devices - avoid bluetooth devices.
+INPUT_DEVICE_INDEX = 2  
+OUTPUT_DEVICE_INDEX = 1 
 
-# --- CRITICAL SETTING ---
-# This MUST match the sample rate set in your Focusrite Control software.
+# If you are using a dedicated audio interface (such as a Scarlett 2i2), then the sample rate below MUST match the sample rate set in it.
 # 44100 is the standard and most compatible rate.
 SAMPLE_RATE = 44100
 
 # --- Performance & Stability Parameters ---
 BLOCK_SIZE = 2048       # A balanced block size for good performance
-LATENCY = 'low'         # Your Scarlett can likely handle low latency
-
+LATENCY = 'low'        
 # --- Adaptive Filter Parameters (Tunable) ---
 FILTER_LENGTH = 512
 # A conservative step size is best to start with.

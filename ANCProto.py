@@ -21,6 +21,12 @@ FILTER_LENGTH = 512
 # A conservative step size is best to start with.
 STEP_SIZE = 0.2
 
+# --- Safety ---
+# Hard ceiling on the anti-noise sent to the speaker (1.0 = full scale).
+# The filter can go unstable and produce samples far beyond full scale, which hits
+# the speaker (and your ears) at maximum volume. Raise this only once things are stable.
+OUTPUT_LIMIT = 0.25
+
 # --- Global State ---
 w = np.zeros(FILTER_LENGTH)
 zi = np.zeros(FILTER_LENGTH - 1)
@@ -56,8 +62,9 @@ def stable_lms_callback(indata, outdata, frames, time, status):
     w += (STEP_SIZE / num_frames) * gradient
     np.clip(w, -2.0, 2.0, out=w)
 
-    # Send the anti-noise to the output
-    outdata[:] = -y[FILTER_LENGTH - 1:].reshape(-1, 1)
+    # Send the anti-noise to the output, hard-limited for speaker/hearing safety
+    out = np.clip(-y[FILTER_LENGTH - 1:], -OUTPUT_LIMIT, OUTPUT_LIMIT)
+    outdata[:] = out.reshape(-1, 1)
 
 
 def main():
@@ -71,6 +78,7 @@ def main():
         print(f"Input Device: {sd.query_devices(INPUT_DEVICE_INDEX)['name']}")
         print(f"Output Device: {sd.query_devices(OUTPUT_DEVICE_INDEX)['name']}")
         print(f"Sample Rate: {SAMPLE_RATE} Hz")
+        print(f"Output limit: {OUTPUT_LIMIT:.2f} of full scale")
         print("Press Ctrl+C to stop.")
 
         with sd.Stream(

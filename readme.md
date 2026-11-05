@@ -68,6 +68,7 @@ This will lead to a much more stable and effective noise cancellation system.
 ## How to Run
 
 ⚠️ Warning: This script can produce loud, sudden, and unstable noise. Always start with your speaker volume set to minimum and increase it slowly.
+The script hard-limits its output to `OUTPUT_LIMIT` (25% of full scale by default) as a safety net; raise it in the script only once the filter is behaving.
 
 1. Install the required Python libraries using the requirements.txt file:
     pip install -r requirements.txt
